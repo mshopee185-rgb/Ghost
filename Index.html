@@ -1,1 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ghost Tweak Panel</title>
+    <style>
+        body { background-color: #121212; color: #fff; font-family: monospace; padding: 20px; }
+        h1 { color: #ff8c00; }
+        .box { background: #1e1e1e; padding: 15px; border-radius: 8px; border: 1px solid #333; }
+        ul { padding-left: 20px; }
+        li { margin-bottom: 8px; color: #00ffcc; }
+    </style>
+</head>
+<body>
+    <h1>GHOST TWEAK PANEL</h1>
+    <div class="box">
+        <h3>Authorized Devices List</h3>
+        <p>Active clients list loaded from database:</p>
+        <ul id="device-list">Loading devices...</ul>
+    </div>
 
+    <script>
+        fetch('approved_devices.json')
+            .then(res => res.json())
+            .then(data => {
+                const list = document.getElementById('device-list');
+                list.innerHTML = '';
+                if(data.devices.length === 0) {
+                    list.innerHTML = '<li style="color: #ff5555;">No approved devices yet.</li>';
+                    return;
+                }
+                data.devices.forEach(id => {
+                    let li = document.createElement('li');
+                    li.textContent = id;
+                    list.appendChild(li);
+                });
+            })
+            .catch(err => {
+                document.getElementById('device-list').innerHTML = '<span style="color:red;">Error loading database.</span>';
+            });
+    </script>
+</body>
+</html>
